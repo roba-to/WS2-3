@@ -110,23 +110,21 @@ public class PredictivePrototypeTest {
     @Test
     public void signatureToWordsTest() {
 //        Note this test uses the smallDict.txt dictionary for testing purposes
-        PredictivePrototype.setDictionary("smallDict.txt");
+        PredictivePrototype test = new PredictivePrototype();
 
         Set<String> result = new HashSet<>();
         result.add("abs");
         result.add("bap"); result.add("bar");
         result.add("cap"); result.add("car");
-        assertTrue(result.equals(PredictivePrototype.signatureToWords("227")));
+        assertTrue(result.equals(test.signatureToWords("227")));
 
         result.clear();
         result.add("guttering");
-        assertTrue(result.equals(PredictivePrototype.signatureToWords("488837464")));
+        assertTrue(result.equals(test.signatureToWords("488837464")));
 
         result.clear();
         result.add("good"); result.add("gone");
         result.add("home"); result.add("hone"); result.add("hood"); result.add("hoof");
-        assertTrue(result.equals(PredictivePrototype.signatureToWords("4663")));
-
-
+        assertTrue(result.equals(test.signatureToWords("4663")));
     }
 }

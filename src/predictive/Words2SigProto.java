@@ -10,8 +10,9 @@ package predictive;
  */
 public class Words2SigProto {
     public static void main(String[] args) {
+        PredictivePrototype p1 = new PredictivePrototype();
         for (String s :  args) {
-            System.out.println(s + " : " + PredictivePrototype.wordToSignature(s));
+            System.out.println(s + " : " + p1.wordToSignature(s));
         }
     }
 }

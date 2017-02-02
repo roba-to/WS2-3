@@ -1,5 +1,6 @@
 package predictive;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,15 +22,32 @@ public class ListDictionary {
             while (scan.hasNextLine()) {
                 s = scan.nextLine();
                 if (isValidWord(s)) {
-                    myDictionary.add(new WordSig(s));
+                    this.myDictionary.add(new WordSig(PredictivePrototype.wordToSignature(s), s));
                 }
             }
-            scan.close();
-            Collections.sort(myDictionary);
+            Collections.sort(this.myDictionary);
         }
-        catch (Exception fileNotFoundException) {
-            System.out.println(path + " could not be found!");
+        catch (IOException e){
+            System.err.println(e.getMessage());
         }
+    }
+
+    /** Getter to retrieve dictionary from ListDictionary object
+     * Mainly used for testing purposes
+     *
+     * @return an ArrayList<WordSig> dictionary
+     */
+    public ArrayList<WordSig> getMyDictionary() {
+        return myDictionary;
+    }
+
+    /** Getter to retrieve path, as a String, from ListDictionary object
+     * Mainly used for testing purposes
+     *
+     * @return a String detailing the dictionary's path name
+     */
+    public String getPath() {
+        return path.toString();
     }
 
     public static boolean isValidWord(String word) {
@@ -47,6 +65,21 @@ public class ListDictionary {
 
     public static Set<String> signature2Words(String signature) {
         Set<String> set = new HashSet<>();
+        int pos = Collections.binarySearch(myDictionary, new WordSig(signature, null));
+        if (pos < 0) return set;
+
+        int backtrack = pos;
+
+        //Move forward through the dictionary adding words with a matching signature to the result set
+        while (pos < myDictionary.size() - 1 && myDictionary.get(pos).getSignature().equals(signature)) {
+            set.add(myDictionary.get(pos).getWord());
+            pos++;
+        }
+        //Move backwards through the dictionary adding words with a matching signature to the result set
+        while (0 <= backtrack && myDictionary.get(backtrack).getSignature().equals(signature)) {
+            set.add(myDictionary.get(backtrack).getWord());
+            backtrack--;
+        }
         return set;
     }
 
@@ -58,11 +91,15 @@ public class ListDictionary {
         return buff.toString();
     }
 
-    public static void main(String[] args) {
-        ListDictionary l1 = new ListDictionary("smallDict.txt");
 
-//        System.out.println(l1);
-        signature2Words("227");
-//        System.out.println(Collections.binarySearch(myDictionary, new WordSig()));
+    public static void main(String[] args) {
+        Long startTime = System.nanoTime();
+        ListDictionary l1 = new ListDictionary("smallDict.txt");
+        Long endTime = System.nanoTime();
+        System.out.println(endTime - startTime);
+
+        System.out.println(l1);
+//        signature2Words("227");
+
     }
 }

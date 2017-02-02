@@ -1,6 +1,7 @@
 package predictive;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,9 +16,10 @@ import java.util.regex.Pattern;
  * @version 31/01/2017
  */
 public class PredictivePrototype {
-    private static final String[] choices = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+//    private static final String[] choices = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    private static final String[] choices = {"", "", "[abc]", "[def]", "[ghi]", "[jkl]", "[mno]", "[pqrs]", "[tuv]", "[wxyz]"};
     private static final String keypad = "22233344455566677778889999";
-    private static File dict = new File("smallDict.txt");
+    private static File path = new File("smallDict.txt");
 
     /** wordToSignature is a method that takes a word and
      * returns a numeric signature. For example. "home" should
@@ -34,7 +36,6 @@ public class PredictivePrototype {
      */
     public static String wordToSignature(String word) {
         int c; word = word.toLowerCase();
-        String result = "";
 
         StringBuffer buff = new StringBuffer();
         for (int i = 0; i < word.length(); i++) {
@@ -70,21 +71,10 @@ public class PredictivePrototype {
             return makePattern(signature.substring(1));
         }
         else {
-            return "[" + choices[Integer.parseInt(signature.substring(0,1))] + "]" + makePattern(signature.substring(1));
+//            return "[" + choices[Integer.parseInt(signature.substring(0,1))] + "]" + makePattern(signature.substring(1));
+            return choices[Integer.parseInt(signature.substring(0,1))] + makePattern(signature.substring(1));
 
         }
-    }
-
-    /** setDictionary is a method which allows the user to change the
-     * filename of the dictionary file to be used. The current program
-     * directory contains the dictionaries "smallDict.txt" and "words.txt"
-     *
-     * For testing purposes, I recommend that "smallDict.txt" is used.
-     *
-     * @param newfile the new filename of the dictionary you wish to use
-     */
-    public static void setDictionary(String newfile) {
-        dict = new File(newfile);
     }
 
     /** signatureToWords is a method that takes a numeric signature and
@@ -110,9 +100,8 @@ public class PredictivePrototype {
         String s; Matcher m; Pattern p;
         Set<String> set = new HashSet<>();
 
-        try {
-//            dict = new File("words.txt");
-            Scanner scan = new Scanner(dict);
+        try (Scanner scan = new Scanner(path)){
+//            path = new File("words.txt");
             p = Pattern.compile(makePattern(signature));
 
             while (scan.hasNextLine()) {
@@ -125,15 +114,15 @@ public class PredictivePrototype {
             scan.close();
             return set;
         }
-        catch (Exception fileNotFoundException){
-            System.out.println("File not found!");
+        catch (IOException e){
+            System.err.println(e.getMessage());
         }
         return set;
     }
 
     public static void main(String[] args) {
-        System.out.println(wordToSignature("Hello"));
-        System.out.println(signatureToWords("22"));
+//        System.out.println(wordToSignature("Hello"));
+//        System.out.println(signatureToWords("22"));
 //        System.out.println(wordToSignature("F**k"));
 //        System.out.println(makePattern(""));
 
