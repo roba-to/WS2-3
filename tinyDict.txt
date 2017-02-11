@@ -1,0 +1,6 @@
+aardvark
+dinosaur
+monster
+pupil
+triangle
+weirdo

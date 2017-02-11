@@ -8,7 +8,7 @@ public class Sigs2WordsList {
     public static void main(String[] args) {
         ListDictionary ld = new ListDictionary("words.txt");
         for (String s : args) {
-            System.out.println(s + " : " + ld.signature2Words(s));
+            System.out.println(s + " : " + ld.signatureToWords(s));
         }
     }
 }

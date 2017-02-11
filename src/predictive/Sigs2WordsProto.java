@@ -2,7 +2,7 @@ package predictive;
 
 /** Sigs2WordsProto.java
  * Sigs2WordsProto is a command-line program for calling the
- * signature2Words method of the PredictivePrototype class for
+ * signatureToWords method of the PredictivePrototype class for
  * Worksheet 3: Predictive Text Entry
  *
  * Created by Robert Campbell on 31/01/2017.

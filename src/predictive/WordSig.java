@@ -25,11 +25,14 @@ public class WordSig implements Comparable<WordSig>{
     }
 
     public int compareTo(WordSig ws) {
-        BigInteger w1 = new BigInteger(this.getSignature());
-        BigInteger w2 = new BigInteger(ws.getSignature());
-        return w1.compareTo(w2);
+        return this.getSignature().compareTo(ws.getSignature());
 
 //        The Code below isn't any more efficient than the above code for massive signatures!!!!
+
+//        BigInteger w1 = new BigInteger(this.getSignature());
+//        BigInteger w2 = new BigInteger(ws.getSignature());
+//        return w1.compareTo(w2);
+
 //        String a = this.getSignature();
 //        String b = ws.getSignature();
 //

@@ -11,16 +11,14 @@ import java.util.regex.Pattern;
  */
 public class ListDictionary {
     private static ArrayList<WordSig> myDictionary = new ArrayList<>();
-    private File path;
 
     public ListDictionary(String path) {
-        this.path = new File(path);
         String s;
 
-        try (Scanner scan = new Scanner(this.path)) {
+        try (Scanner scan = new Scanner(new File(path))) {
 
             while (scan.hasNextLine()) {
-                s = scan.nextLine();
+                s = scan.nextLine().toLowerCase();
                 if (isValidWord(s)) {
                     this.myDictionary.add(new WordSig(PredictivePrototype.wordToSignature(s), s));
                 }
@@ -41,14 +39,6 @@ public class ListDictionary {
         return myDictionary;
     }
 
-    /** Getter to retrieve path, as a String, from ListDictionary object
-     * Mainly used for testing purposes
-     *
-     * @return a String detailing the dictionary's path name
-     */
-    public String getPath() {
-        return path.toString();
-    }
 
     public static boolean isValidWord(String word) {
         Pattern p = Pattern.compile("[a-z]");
@@ -63,7 +53,7 @@ public class ListDictionary {
         return true;
     }
 
-    public static Set<String> signature2Words(String signature) {
+    public static Set<String> signatureToWords(String signature) {
         Set<String> set = new HashSet<>();
         int pos = Collections.binarySearch(myDictionary, new WordSig(signature, null));
         if (pos < 0) return set;
@@ -85,7 +75,7 @@ public class ListDictionary {
 
     public String toString() {
         StringBuffer buff = new StringBuffer();
-        for (WordSig word : myDictionary) {
+        for (WordSig word : getMyDictionary()) {
             buff.append(word.getSignature() + " : " + word.getWord() + "\n");
         }
         return buff.toString();
@@ -99,7 +89,9 @@ public class ListDictionary {
         System.out.println(endTime - startTime);
 
         System.out.println(l1);
-//        signature2Words("227");
+//        signatureToWords("227");
+
+        System.out.println(signatureToWords("227").toString());
 
     }
 }
