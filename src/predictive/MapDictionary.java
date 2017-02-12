@@ -16,7 +16,7 @@ public class MapDictionary implements Dictionary {
         try (Scanner scan = new Scanner(new File(path))) {
 
             while (scan.hasNextLine()) {
-                s = scan.nextLine();
+                s = scan.nextLine().toLowerCase();
                 if (ListDictionary.isValidWord(s)) {
                     map.computeIfAbsent(PredictivePrototype.wordToSignature(s), k -> new HashSet<>()).add(s);
                 }
@@ -29,7 +29,12 @@ public class MapDictionary implements Dictionary {
 
     @Override
     public Set<String> signatureToWords(String signature) {
+        if (map.get(signature) == null) {
+            return new HashSet<>();
+        }
+        else {
             return map.get(signature);
+        }
     }
 
     public static void main(String[] args) {
@@ -49,15 +54,10 @@ public class MapDictionary implements Dictionary {
 //
 //        System.out.println(test.get("227").toString());
 
-        MapDictionary m1 = new MapDictionary("smallDict.txt");
+        MapDictionary md = new MapDictionary("words.txt");
 
-        String[] s1 = {"227", "4663"};
-
-        for (String s : s1) {
-            if (m1.map.containsKey(s)) {
-                System.out.println(m1.signatureToWords(s));
-            }
-        }
+//        Note that the starting 0 is an invalid signature number and thus no matches should be found
+        System.out.println(md.signatureToWords("04663"));
 
     }
 }

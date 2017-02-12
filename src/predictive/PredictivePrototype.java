@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * This exercise assesses several concepts taught on the course
  * including data structures and algorithms.
  * Created by Robert Campbell on 31/01/2017.
- * @version 31/01/2017
+ * @version 12/02/2017
  */
 public class PredictivePrototype {
 //    private static final String[] choices = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
@@ -35,7 +35,8 @@ public class PredictivePrototype {
      * @return a string containing a signature using numeric characters 2-9 inclusive and/or whitespace
      */
     public static String wordToSignature(String word) {
-        int c; word = word.toLowerCase();
+        int c;
+        word = word.toLowerCase();
 
         StringBuffer buff = new StringBuffer();
         for (int i = 0; i < word.length(); i++) {
@@ -48,6 +49,15 @@ public class PredictivePrototype {
             }
         }
         return buff.toString();
+    }
+
+    /** setter to change path for dictionary .txt file to be used
+     * in signatureToWords() method.
+     *
+     * @param path the path to the dictionary .txt file you wish to use
+     */
+    public void setPath(String path) {
+        this.path = new File(path);
     }
 
     /** makePattern is a recursive method which takes a numeric signature
@@ -67,13 +77,35 @@ public class PredictivePrototype {
 //        else if (signature.length() == 1) {
 //            return "[" + choices[Integer.parseInt(signature.substring(0,1))] + "].*";
 //        }
-        else if (Integer.parseInt(signature.substring(0,1)) <= 1 || Integer.parseInt(signature.substring(0,1)) > 9) {
-            return makePattern(signature.substring(1));
+        else if ((signature.charAt(0) - '0' <= 1 || signature.charAt(0) - '0' > 9)) {
+                return makePattern(signature.substring(1));
         }
         else {
 //            return "[" + choices[Integer.parseInt(signature.substring(0,1))] + "]" + makePattern(signature.substring(1));
             return choices[Integer.parseInt(signature.substring(0,1))] + makePattern(signature.substring(1));
 
+        }
+    }
+
+    /** is ValidSignature is a recursive method which checks that each character of the
+     * given signature is in range 2-9 inclusively. If the signature does not conform to
+     * this criteria then the method returns false, otherwise true.
+     *
+     * Precondition: signatures may only contain String characters 2-9. This method does
+     * not guarantee functionality for methods containing other characters
+     *
+     * @param signature the String signature you wish to check for validity
+     * @return a boolean indicating if the signature is valid
+     */
+    public static boolean isValidSignature(String signature) {
+        if (signature.length() < 1) {
+            return true;
+        }
+        else if ((signature.charAt(0) - '0' <= 1 || signature.charAt(0) - '0' > 9)) {
+            return false;
+        }
+        else {
+            return isValidSignature(signature.substring(1));
         }
     }
 
@@ -89,35 +121,45 @@ public class PredictivePrototype {
      *
      * The method uses a scanner along with pattern matching of a generated
      * regular expression to find matching words from the dictionary .txt file
-     * specified.
+     * specified. Any word which contains a non-alphabetic character will be skipped
      *
-     * The returned list of words does not have duplicates and each word is in lowercase.
+     * Before scanning the dictionary the method first checks the validity of the signature
+     * using the isValidSignature method. If the signature is invalid then the method returns
+     * an empty set
+     *
+     * The returned list of words does not have duplicates, each word is in lowercase, and
+     * each word does not contain any non-alphabetic characters.
      *
      * @param signature the numeric signature to be used for matching
      * @return a set of possible matching words from the dictionary
      */
     public static Set<String> signatureToWords(String signature) {
-        String s; Matcher m; Pattern p;
-        Set<String> set = new HashSet<>();
+        if (isValidSignature(signature)) {
+            String s;
+            Matcher m;
+            Pattern p;
+            Set<String> set = new HashSet<>();
 
-        try (Scanner scan = new Scanner(path)){
-//            path = new File("words.txt");
-            p = Pattern.compile(makePattern(signature));
+            try (Scanner scan = new Scanner(path)) {
+                p = Pattern.compile(makePattern(signature));
 
-            while (scan.hasNextLine()) {
-                s = scan.nextLine();
-                m = p.matcher(s);
-                if (m.matches()) {
-                    set.add(s.toLowerCase());
+                while (scan.hasNextLine()) {
+                    s = scan.nextLine();
+                    m = p.matcher(s);
+                    if (m.matches()) {
+                        set.add(s.toLowerCase());
+                    }
                 }
+                scan.close();
+                return set;
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
             }
-            scan.close();
             return set;
         }
-        catch (IOException e){
-            System.err.println(e.getMessage());
+        else {
+            return new HashSet<>();
         }
-        return set;
     }
 
     public static void main(String[] args) {
@@ -126,6 +168,10 @@ public class PredictivePrototype {
 //        System.out.println(wordToSignature("F**k"));
 //        System.out.println(makePattern(""));
 
+//        System.out.println(isValidSignature("2"));
+//        System.out.println(wordToSignature("apple"));
+//        System.out.println(signatureToWords("4663S"));
+//        System.out.println(isValidSignature(" "));
 
     }
 

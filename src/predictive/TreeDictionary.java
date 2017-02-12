@@ -3,6 +3,7 @@ package predictive;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -26,7 +27,7 @@ public class TreeDictionary implements Dictionary {
         try (Scanner scan = new Scanner(new File(path))) {
 
             while (scan.hasNextLine()) {
-                s = scan.nextLine();
+                s = scan.nextLine().toLowerCase();
                 if (ListDictionary.isValidWord(s)) {
 //                    System.out.println(s);
                     addWord(s, s);
@@ -44,9 +45,12 @@ public class TreeDictionary implements Dictionary {
 
             if (getChildren()[i] == null) {
                 getChildren()[i] = new TreeDictionary();
+//                System.out.println(word);
                 getChildren()[i].getWords().add(word);
+                getChildren()[i].addWord(word, input.substring(1));
             }
             else {
+//                System.out.println(word);
                 getChildren()[i].getWords().add(word);
                 getChildren()[i].addWord(word, input.substring(1));
             }
@@ -63,11 +67,19 @@ public class TreeDictionary implements Dictionary {
 
     @Override
     public Set<String> signatureToWords(String signature) {
-        return trimSignatureToWords(signature, signature.length());
+        if (PredictivePrototype.isValidSignature(signature)) {
+            return trimSignatureToWords(signature, signature.length());
+        }
+        else {
+            return new HashSet<>();
+        }
     }
 
     public Set<String> trimSignatureToWords(String signature, int trimmedLength) {
         int i = Integer.parseInt(signature.substring(0,1)) - 2;
+        if (i < 0 || i > 8) {
+            return new HashSet<>();
+        }
 //        System.out.println(signature);
         if (getChildren()[i] == null) {
             return new HashSet<>();

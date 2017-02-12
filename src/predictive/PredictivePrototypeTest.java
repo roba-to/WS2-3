@@ -7,63 +7,146 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
 
 /**
  * Created by Rob on 01/02/2017.
  */
 public class PredictivePrototypeTest {
 
+    @Test
+    public void isValidSignatureTest0() {
+        assertFalse(PredictivePrototype.isValidSignature("0"));
+    }
+
+    @Test
+    public void isValidSignatureTest1() {
+        assertFalse(PredictivePrototype.isValidSignature("1"));
+    }
+
+    @Test
+    public void isValidSignatureTest2() {
+        assertTrue(PredictivePrototype.isValidSignature("2"));
+    }
+
+    @Test
+    public void isValidSignatureTest3() {
+        assertTrue(PredictivePrototype.isValidSignature("3"));
+    }
+
+    @Test
+    public void isValidSignatureTest4() {
+        assertTrue(PredictivePrototype.isValidSignature("4"));
+    }
+
+    @Test
+    public void isValidSignatureTest5() {
+        assertTrue(PredictivePrototype.isValidSignature("5"));
+    }
+
+    @Test
+    public void isValidSignatureTest6() {
+        assertTrue(PredictivePrototype.isValidSignature("6"));
+    }
+
+    @Test
+    public void isValidSignatureTest7() {
+        assertTrue(PredictivePrototype.isValidSignature("7"));
+    }
+
+    @Test
+    public void isValidSignatureTest8() {
+        assertTrue(PredictivePrototype.isValidSignature("8"));
+    }
+
+    @Test
+    public void isValidSignatureTest9() {
+        assertTrue(PredictivePrototype.isValidSignature("9"));
+    }
+
+    @Test
+    public void isValidSignatureTest10() {
+        assertFalse(PredictivePrototype.isValidSignature("A"));
+    }
+
+    @Test
+    public void isValidSignatureTest11() {
+        assertFalse(PredictivePrototype.isValidSignature("p"));
+    }
+
+    @Test
+    public void isValidSignatureTest12() {
+        assertFalse(PredictivePrototype.isValidSignature("2345678910"));
+    }
+
+    @Test
+    public void isValidSignatureTest13() {
+        assertFalse(PredictivePrototype.isValidSignature("2345A678"));
+    }
+
 //    makePattern() testing
     @Test
     public void makePatternsTest0() {
         assertEquals("", PredictivePrototype.makePattern("0"));
     }
+
     @Test
     public void makePatternsTest1() {
         assertEquals("", PredictivePrototype.makePattern("1"));
     }
+
     @Test
     public void makePatternsTest2() {
         assertEquals("[abc]", PredictivePrototype.makePattern("2"));
     }
+
     @Test
     public void makePatternsTest3() {
         assertEquals("[def]", PredictivePrototype.makePattern("3"));
     }
+
     @Test
     public void makePatternsTest4() {
         assertEquals("[ghi]", PredictivePrototype.makePattern("4"));
     }
+
     @Test
     public void makePatternsTest5() {
         assertEquals("[jkl]", PredictivePrototype.makePattern("5"));
     }
+
     @Test
     public void makePatternsTest6() {
         assertEquals("[mno]", PredictivePrototype.makePattern("6"));
     }
+
     @Test
     public void makePatternsTest7() {
         assertEquals("[pqrs]", PredictivePrototype.makePattern("7"));
     }
+
     @Test
     public void makePatternsTest8() {
         assertEquals("[tuv]", PredictivePrototype.makePattern("8"));
     }
+
     @Test
     public void makePatternsTest9() {
         assertEquals("[wxyz]", PredictivePrototype.makePattern("9"));
     }
+
     @Test
     public void makePatternsTest10() {
         assertEquals("[abc][def][ghi][jkl][mno][pqrs][tuv][wxyz]", PredictivePrototype.makePattern("0123456789"));
     }
+
     @Test
     public void makePatternsTest11() {
         assertEquals("[wxyz][tuv][pqrs][mno][jkl][ghi][def][abc]", PredictivePrototype.makePattern("9876543210"));
     }
 
-//   wordToSignature() testing
+//        wordToSignature() testing
     @Test
     public void wordToSignatureTest() {
         assertEquals("", PredictivePrototype.wordToSignature(""));
@@ -230,7 +313,6 @@ public class PredictivePrototypeTest {
 
     @Test
     public void wordToSignatureTest27() {
-
 //        Test word inputs
         assertEquals("27753", PredictivePrototype.wordToSignature("Apple"));
         assertEquals("27753", PredictivePrototype.wordToSignature("apple"));
@@ -254,9 +336,9 @@ public class PredictivePrototypeTest {
 
     }
 
+//        Note these tests use the smallDict.txt dictionary for testing purposes
     @Test
     public void signatureToWordsTest() {
-//        Note this test uses the smallDict.txt dictionary for testing purposes
         PredictivePrototype test = new PredictivePrototype();
 
         Set<String> result = new HashSet<>();
@@ -283,8 +365,66 @@ public class PredictivePrototypeTest {
         PredictivePrototype test = new PredictivePrototype();
         Set<String> result = new HashSet<>();
 
-        result.add("good"); result.add("gone");
-        result.add("home"); result.add("hone"); result.add("hood"); result.add("hoof");
+        result.add("good");
+        result.add("gone");
+        result.add("home");
+        result.add("hone");
+        result.add("hood");
+        result.add("hoof");
         assertTrue(result.equals(test.signatureToWords("4663")));
+    }
+
+    @Test
+    public void signatureToWordsTest3() {
+        PredictivePrototype test = new PredictivePrototype();
+        Set<String> result = new HashSet<>();
+
+        assertTrue(result.equals(test.signatureToWords("")));
+    }
+
+    @Test
+    public void signatureToWordsTest4() {
+        PredictivePrototype test = new PredictivePrototype();
+        Set<String> expected = new HashSet<>();
+
+        expected.add("robert");
+
+        assertTrue(expected.equals(test.signatureToWords("762378")));
+    }
+
+    @Test
+    public void signatureToWordsTest5() {
+        PredictivePrototype test = new PredictivePrototype();
+        Set<String> expected =  new HashSet<>();
+
+//        Note that the starting 0 is an invalid signature number and thus no matches should be found
+        assertTrue(expected.equals((test.signatureToWords("04663"))));
+    }
+
+    @Test
+    public void signatureToWordsTest6() {
+        PredictivePrototype test = new PredictivePrototype();
+        Set<String> expected =  new HashSet<>();
+
+//        Note that the 3rd character '0' is an invalid signature number and thus no matches should be found
+        assertTrue(expected.equals((test.signatureToWords("46063"))));
+    }
+
+    @Test
+    public void signatureToWordsTest7() {
+        PredictivePrototype test = new PredictivePrototype();
+        Set<String> expected =  new HashSet<>();
+
+//        Note that the final character 'S' is an invalid signature number and thus no matches should be found
+        assertTrue(expected.equals(test.signatureToWords("4663S")));
+    }
+
+    @Test
+    public void signatureToWordsTest8() {
+        PredictivePrototype test = new PredictivePrototype();
+        Set<String> expected = new HashSet<>();
+
+//        Not a single word should match this signature
+        assertTrue(expected.equals(test.signatureToWords("2345678923456789")));
     }
 }
